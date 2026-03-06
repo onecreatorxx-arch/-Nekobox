@@ -13,6 +13,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Grant execute permissions
+        run: chmod +x run gradlew
+
       - name: Golang Status
         run: find buildScript libcore/*.sh | xargs cat | sha1sum > golang_status
 
@@ -33,10 +36,6 @@ jobs:
           go-version: ^1.25
           cache-dependency-path: libcore/go.sum
 
-      - name: Grant execute permissions
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: chmod +x run gradlew
-
       - name: Build LibCore
         if: steps.cache.outputs.cache-hit != 'true'
         run: ./run lib core
@@ -48,6 +47,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Grant execute permissions
+        run: chmod +x run gradlew
 
       - name: Golang Status
         run: find buildScript libcore/*.sh | xargs cat | sha1sum > golang_status
@@ -80,7 +82,6 @@ jobs:
         env:
           BUILD_PLUGIN: none
         run: |
-          chmod +x run gradlew
           echo "sdk.dir=${ANDROID_HOME}" > local.properties
           echo "ndk.dir=${ANDROID_HOME}/ndk/25.0.8775105" >> local.properties
           export LOCAL_PROPERTIES="${{ secrets.LOCAL_PROPERTIES }}"
